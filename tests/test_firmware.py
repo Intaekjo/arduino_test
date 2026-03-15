@@ -78,3 +78,14 @@ def test_run_cli_command_uses_requested_cwd(monkeypatch: pytest.MonkeyPatch) -> 
     assert captured["capture_output"] is True
     assert captured["text"] is True
     assert captured["check"] is False
+
+
+def test_project_root_uses_executable_directory_when_frozen(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    fake_executable = tmp_path / "PressureControlConsole" / "PressureControlConsole.exe"
+    fake_executable.parent.mkdir(parents=True)
+    fake_executable.write_bytes(b"exe")
+
+    monkeypatch.setattr(firmware.sys, "frozen", True, raising=False)
+    monkeypatch.setattr(firmware.sys, "executable", str(fake_executable), raising=False)
+
+    assert firmware.project_root() == fake_executable.parent

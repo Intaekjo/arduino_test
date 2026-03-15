@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 
 from .constants import DEFAULT_FQBN
 
@@ -22,6 +23,8 @@ class FirmwareCommandSet:
 
 
 def project_root() -> Path:
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
     return Path(__file__).resolve().parents[3]
 
 

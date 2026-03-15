@@ -47,6 +47,31 @@ arduino-cli core install arduino:avr
 
 The GUI expects `arduino-cli` to be on `PATH`.
 
+## GitHub Release
+
+This repo now includes a GitHub Actions workflow at `.github/workflows/release.yml`
+that builds a Windows release bundle and attaches it to a GitHub Release whenever
+you push a tag that starts with `v`.
+
+Release flow:
+
+```powershell
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The workflow will:
+
+- run the Python tests
+- build a Windows `PressureControlConsole` bundle with PyInstaller
+- attach `PressureControlConsole-windows.zip` to the GitHub Release
+
+You can also build the same release bundle locally:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\build_release.ps1
+```
+
 ## Safety Note
 
 This project assumes the software-defined OFF state should also mean the
@@ -54,4 +79,3 @@ solenoid is physically OFF. Verify the NC relay wiring on the bench before
 energizing the real system. If the relay drops into an unsafe energized state
 when control power is removed, rewire to a fail-safe NO path or add an
 interposing relay.
-
